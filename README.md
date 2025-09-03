@@ -3,11 +3,12 @@ EEPROM for storing last used channel and volume information.
 Two buttons for controlling volume and channel.
 
 PIN ASSIGNMENT FOR PIC10F2XX
-sda         EQU    GP2
 
-scl         EQU    GP1
+sda      EQU GP2
 
-but_up      EQU    GP3
+scl      EQU GP1
 
-but_down    EQU    GP0
+but_up   EQU GP3
+
+but_down EQU GP0
 
