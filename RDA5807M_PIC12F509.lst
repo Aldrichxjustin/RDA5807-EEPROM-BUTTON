@@ -1,0 +1,717 @@
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;==========================================================================
+                      00002 ; TITLE      PIC20X+PIC12F50X+RDA5807M+24C02+Button                       =
+                      00003 ; SUBTITLE   PIC10F200,F202,F204,F206,F220,F222,12F508,12F509 & 12F510    =
+                      00004 ; CONTENTS:  I²C RDA5807M + Button Control                                =
+                      00005 ; EDITOR:    @mit41301                                                    =
+                      00006 ; UPDATED:   01/09/2025                                                   =
+                      00007 ;==========================================================================
+                      00008  
+                      00009  ifdef __10F200
+                      00010  include "p10F200.inc"
+                      00011  list    p=10F200
+                      00012 RAM     SET  H'0010'
+                      00013 MAXRAM  EQU  H'001F'
+                      00014  __CONFIG _IntRC_OSC & _WDT_OFF & _CP_OFF & _MCLRE_OFF
+                      00015  __idlocs H'F200'
+                      00016 sda         EQU    GP2    ;SDA pin of the I2C
+                      00017 scl         EQU    GP1    ;SCL pin of the I2C
+                      00018 but_up      EQU    GP3    ;Button Volume up/Next station
+                      00019 but_down    EQU    GP0    ;Button Volume down/Previous station
+                      00020  endif
+                      00021 ;==========================================================================
+                      00022  ifdef __10F202
+                      00023  include "p10F202.inc"
+                      00024  list    p=10F202
+                      00025 RAM     EQU  h'0008'
+                      00026 MAXRAM  EQU  H'001F'
+                      00027  __CONFIG _IntRC_OSC & _WDT_OFF & _CP_OFF & _MCLRE_OFF
+                      00028  __idlocs H'F202'
+                      00029 sda         EQU    GP2    ;SDA pin of the I2C
+                      00030 scl         EQU    GP1    ;SCL pin of the I2C
+                      00031 but_up      EQU    GP3    ;Button Volume up/Next station
+                      00032 but_down    EQU    GP0    ;Button Volume down/Previous station
+                      00033  endif
+                      00034 ;==========================================================================
+                      00035  ifdef __10F204
+                      00036  include "p10F204.inc"
+                      00037  list    p=10F204
+                      00038 RAM     EQU  H'0010'
+                      00039 MAXRAM  EQU  H'001F'
+                      00040  __CONFIG _IntRC_OSC & _WDT_OFF & _CP_OFF & _MCLRE_OFF
+                      00041  __idlocs H'F204'
+                      00042 sda         EQU    GP2    ;SDA pin of the I2C
+                      00043 scl         EQU    GP1    ;SCL pin of the I2C
+                      00044 but_up      EQU    GP3    ;Button Volume up/Next station
+                      00045 but_down    EQU    GP0    ;Button Volume down/Previous station
+                      00046  endif
+                      00047 ;==========================================================================
+                      00048  ifdef __10F206
+                      00049  include "p10F206.inc"
+                      00050  list    p=10F206
+                      00051 RAM     EQU  h'0008'
+                      00052 MAXRAM  EQU  H'001F'
+                      00053  __CONFIG _IntRC_OSC & _WDT_OFF & _CP_OFF & _MCLRE_OFF
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00054  __idlocs H'F206'
+                      00055 sda         EQU    GP2    ;SDA pin of the I2C
+                      00056 scl         EQU    GP1    ;SCL pin of the I2C
+                      00057 but_up      EQU    GP3    ;Button Volume up/Next station
+                      00058 but_down    EQU    GP0    ;Button Volume down/Previous station
+                      00059  endif
+                      00060 ;==========================================================================
+                      00061  ifdef __10F220
+                      00062  include "p10F220.inc"
+                      00063  list    p=10F220
+                      00064 RAM     EQU  H'0010'
+                      00065 MAXRAM  EQU  H'001F'
+                      00066  __CONFIG _IOSCFS_4MHZ & _WDT_OFF & _CP_OFF & _MCLRE_OFF
+                      00067  __idlocs H'F220'
+                      00068 sda         EQU    GP2    ;SDA pin of the I2C
+                      00069 scl         EQU    GP1    ;SCL pin of the I2C
+                      00070 but_up      EQU    GP3    ;Button Volume up/Next station
+                      00071 but_down    EQU    GP0    ;Button Volume down/Previous station
+                      00072  endif
+                      00073 ;==========================================================================
+                      00074  ifdef __10F222
+                      00075  include "p10F222.inc"
+                      00076  list    p=10F222
+                      00077 RAM     EQU  h'0009'
+                      00078 MAXRAM  EQU  H'001F'
+                      00079  __CONFIG _IOSCFS_4MHZ & _WDT_OFF & _CP_OFF & _MCLRE_OFF
+                      00080  __idlocs H'F222'
+                      00081 sda         EQU    GP2    ;SDA pin of the I2C
+                      00082 scl         EQU    GP1    ;SCL pin of the I2C
+                      00083 but_up      EQU    GP3    ;Button Volume up/Next station
+                      00084 but_down    EQU    GP0    ;Button Volume down/Previous station
+                      00085  endif
+                      00086 ;========================================================================== 
+                      00087  ifdef __12F508
+                      00088  include "p12F508.inc"
+                      00089  list    p=12F508
+                      00090 RAM     EQU  h'0007'
+                      00091 MAXRAM  EQU  H'001F'
+                      00092  __CONFIG _IntRC_OSC & _WDT_OFF & _CP_OFF & _MCLRE_OFF
+                      00093  __idlocs H'F508'
+                      00094 but_up     EQU    GP0    ;Button Volume up/Next station
+                      00095 but_down   EQU    GP1    ;Button Volume down/Previous station
+                      00096 scl        EQU    GP4    ;SCL pin of the I²C Bus
+                      00097 sda        EQU    GP5    ;SDA pin of the I²C Bus
+                      00098  endif
+                      00099 ;==========================================================================
+                      00100  ifdef   __12F509
+                      00101  include "p12F509.inc"
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC12F509 processor include
+                      00005 ; 
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00006 ;  (c) Copyright 1999-2013 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00156         LIST
+                      00102  list    p=12F509
+  00000007            00103 RAM     EQU  H'0007'
+  0000003F            00104 MAXRAM  EQU  H'003F'
+0FFF   0FEA           00105  __CONFIG _IntRC_OSC & _WDT_OFF & _CP_OFF & _MCLRE_OFF
+0400   000F 0005 0000 00106  __idlocs H'F509'
+       0009 
+  00000000            00107 but_up     EQU    GP0    ;Button Volume up/Next station
+  00000001            00108 but_down   EQU    GP1    ;Button Volume down/Previous station
+  00000004            00109 scl        EQU    GP4    ;SCL pin of the I²C Bus
+  00000005            00110 sda        EQU    GP5    ;SDA pin of the I²C Bus
+                      00111  endif
+                      00112 ;==========================================================================
+                      00113  ifdef   __12F510
+                      00114  include "p12F510.inc"
+                      00115  list    p=12F510
+                      00116 RAM     EQU  H'000A'
+                      00117 MAXRAM  EQU  H'003F'
+                      00118  __CONFIG _IntRC_OSC & _WDT_OFF & _CP_OFF & _MCLRE_OFF & _IOSCFS_OFF
+                      00119  __idlocs H'F510'
+                      00120 but_up     EQU    GP0    ;Button Volume up/Next station
+                      00121 but_down   EQU    GP1    ;Button Volume down/Previous station
+                      00122 scl        EQU    GP4    ;SCL pin of the I²C Bus
+                      00123 sda        EQU    GP5    ;SDA pin of the I²C Bus
+                      00124  endif
+                      00125 
+                      00126  errorlevel +305
+                      00127 
+                      00128 ;**************************************************************************
+                      00129 ; File register usage                                                     *
+                      00130 ;**************************************************************************
+                      00131 
+                      00132                 cblock RAM
+  00000007            00133 i           ;EQU    010h    ;Delay variable
+  00000008            00134 j           ;EQU    011h    ;Delay variable
+  00000009            00135 bit_count   ;EQU    012h    ;Counter of processed bits in I2C
+  0000000A            00136 i2c_data    ;EQU    013h    ;Data to receive/transmit via I2C
+  0000000B            00137 port        ;EQU    014h    ;Helper register to implement I2C
+  0000000C            00138 ack         ;EQU    015h    ;Acknowledgment received from the device
+  0000000D            00139 volume      ;EQU    016h    ;Radio volume level
+  0000000E            00140 frequency_l ;EQU    017h    ;Frequency low byte
+  0000000F            00141 frequency_h ;EQU    018h    ;Frequency high byte
+  00000010            00142 count       ;EQU    019h    ;Stores the time the button is pressed
+  00000011            00143 button      ;EQU    01Ah    ;The number of button that is pressed
+  00000012            00144 startup     ;EQU    01Bh    ;Indicates if it's the startup state
+  00000013            00145 timer       ;EQU    01Ch    ;Counts time before storing the station
+  00000014            00146 need_save   ;EQU    01Dh    ;Indicates if current station need to be saved
+  00000015            00147 RAM_            
+                      00148                 endc
+                      00149 
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00150         if RAM_ > MAXRAM
+                      00151         error "File register usage overflow"
+                      00152         endif
+                      00153 
+0000                  00154         ORG 0X00 ;added by @mit41301
+                      00155 
+0000   0EFE           00156     andlw   ~1
+                      00157 ;    andlw   B'11111110' ;~1
+0001   0025           00158     movwf   OSCCAL
+                      00159  ifdef __10F204
+                      00160     movlw  B'00000000'   ;Use as Digital I/O 
+                      00161     movwf  CMCON0                ;Disable Digital Comparator function
+                      00162  endif
+                      00163 
+                      00164  ifdef __10F206
+                      00165     movlw  B'00000000'   ;Use as Digital I/O 
+                      00166     movwf  CMCON0                ;Disable Digital Comparator function
+                      00167  endif
+                      00168  ifdef __10F220
+                      00169     movlw  B'00000000'   ;Use as Digital I/O 
+                      00170     movwf  ADCON0                ;Disable Digital Comparator function
+                      00171  endif
+                      00172  ifdef __10F222
+                      00173     movlw  B'00000000'   ;Use as Digital I/O 
+                      00174     movwf  ADCON0                ;Disable Digital Comparator function
+                      00175  endif
+                      00176  ifdef __12F510
+                      00177     movlw  B'00000000'   ;Use as Digital I/O 
+                      00178     movwf  CM1CON0               ;Disable Digital Comparator function
+                      00179     movlw  B'00000000'   ;Use as Digital I/O 
+                      00180     movwf  ADCON0                ;Disable ADC function
+                      00181  endif
+0002                  00182 INIT:
+0002   0C9F           00183     MOVLW ~((1<<T0CS)|(1<<NOT_GPPU))
+0003   0002           00184     OPTION              ;Enable GPIO2 and pull-ups
+0004   0C3F           00185     MOVLW 0x3F          ;Save 0x0F into 'port' register
+0005   002B           00186     MOVWF port          ;It's used to switch SDA/SCL pins direction
+0006   0006           00187     TRIS  GPIO           ;Set all pins as inputs
+                      00188 ;#######################################################################
+0007   0CFF           00189     MOVLW 0xFF          ;Perform 200 ms delay
+0008   09EC           00190     CALL DELAY          ;to let the power stabilize
+                      00191 
+0009   0CFF           00192     MOVLW 0xFF          ;Perform 400 ms delay
+000A   09EC           00193     CALL  DELAY         ;to let the power stabilize
+                      00194 
+000B   0CFF           00195     MOVLW 0xFF          ;Perform 600 ms delay
+000C   09EC           00196     CALL  DELAY         ;to let the power stabilize
+                      00197 
+000D   0CFF           00198     MOVLW 0xFF          ;Perform 800 ms delay
+000E   09EC           00199     CALL  DELAY         ;to let the power stabilize
+                      00200 
+                      00201 ;    MOVLW 0xFF          ;Perform 200 ms delay
+                      00202 ;    CALL  DELAY          ;to let the power stabilize
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00203 ;#######################################################################
+                      00204 
+000F   0066           00205     CLRF GPIO           ;Clear GPIO to set all pins to 0
+0010   0074           00206     CLRF need_save      ;No need to save the station for now
+0011   0512           00207     BSF startup, 0      ;Set 'startup' to 1 to indicate startup state
+                      00208 
+0012                  00209 READ_EEPROM:            ;Reading the stored data from EEPROM
+0012   09BC           00210     CALL I2C_START      ;Issue I2C start condition
+0013   0CA0           00211     MOVLW 0xA0          ;EEPROM chip address for writing is 0xA0
+0014   09C3           00212     CALL I2C_WRITE_BYTE ;Write the EEPROM address via I2C
+0015   0C00           00213     MOVLW 0x00          ;Set the EEPROM memory address to be read
+0016   09C3           00214     CALL I2C_WRITE_BYTE ;And write it via I2C
+0017   09BC           00215     CALL I2C_START      ;Issue I2C repeated start condition
+0018   0CA1           00216     MOVLW 0xA1          ;EEPROM chip address for reading is 0xA1
+0019   09C3           00217     CALL I2C_WRITE_BYTE ;Write EEPROM address via I2C
+001A   09D7           00218     CALL I2C_READ_BYTE  ;Read the EEPROM value at address 0x00
+001B   09E3           00219     CALL I2C_ACK        ;Issue acknowledgement
+001C   020A           00220     MOVF i2c_data, W    ;Copy the 'i2c_data' into W register
+001D   002D           00221     MOVWF volume        ;And store it into 'volume' register
+001E   09D7           00222     CALL I2C_READ_BYTE  ;Read the next EEPROM address
+001F   09E3           00223     CALL I2C_ACK
+0020   020A           00224     MOVF i2c_data, W
+0021   002E           00225     MOVWF frequency_l   ;and store its content into 'frequency_l'
+0022   09D7           00226     CALL I2C_READ_BYTE  ;Read the next EEPROM address
+0023   09E8           00227     CALL I2C_NACK       ;Issue Not acknowledgement, it's the last byte
+0024   020A           00228     MOVF i2c_data, W
+0025   002F           00229     MOVWF frequency_h   ;and store its content into 'frequency_h'
+0026   09BF           00230     CALL I2C_STOP       ;Issue Stop condition
+                      00231 
+0027   0CC0           00232     MOVLW 0xC0          ;Implement AND operation between 0xC0
+0028   016E           00233     ANDWF frequency_l, F;and 'frequency_l' to clear its last 6 bits
+0029   058E           00234     BSF frequency_l, 4  ;Set bit 4 (Tune) to adjust the frequency
+                      00235 
+002A                  00236 START_RADIO:            ;Start FM radio
+002A   09BC           00237     CALL I2C_START      ;Issue I2C Start condition
+002B   0C20           00238     MOVLW 0x20          ;Radio chip address for sequential writing is 0x20
+002C   09C3           00239     CALL I2C_WRITE_BYTE ;Write the radio address via i2C
+002D   0CC0           00240     MOVLW 0xC0          ;Write high byte into radio register 0x02
+                      00241 ;       MOVLW 0xD0 ; added by Tony to enable BASS 
+002E   09C3           00242     CALL I2C_WRITE_BYTE
+002F   0C01           00243     MOVLW 0x01          ;Write low byte into radio register 0x02
+0030   09C3           00244     CALL I2C_WRITE_BYTE
+0031   020F           00245     MOVF frequency_h, W ;Write high byte into radio register 0x03
+0032   09C3           00246     CALL I2C_WRITE_BYTE
+0033   020E           00247     MOVF frequency_l, W ;Write low byte into radio register 0x03
+0034   09C3           00248     CALL I2C_WRITE_BYTE
+0035   09BF           00249     CALL I2C_STOP       ;Issue I2C Stop condition
+                      00250 
+0036   0C0F           00251     MOVLW 0x0F          ;Implement AND operation between 0xC0
+0037   016D           00252     ANDWF volume, F     ;and 'volume' to clear its higher 4 bits
+0038   05ED           00253     BSF volume, 7       ;Set bit 7  to select correct LNA input
+0039   0A56           00254     GOTO SET_VOLUME     ;And go to the 'SET_VOLUME' label
+                      00255 
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+003A                  00256 LOOP:                   ;Main loop of the program
+                      00257     ;Beginning of the button 1 checking
+003A   09A7           00258     CALL CHECK_BUTTONS  ;Read the buttons state
+003B   0E03           00259     ANDLW 3             ;Clear all the bits of the result except two LSBs
+003C   0643           00260     BTFSC STATUS, Z     ;If result is 0 (none of buttons were pressed)
+003D   0A83           00261     GOTO WAIT_FOR_TIMER ;Then go to the 'WAIT_FOR_TIMER' label 
+003E   0C40           00262     MOVLW 40            ;Otherwise load initial value for the delay  
+003F   09EC           00263     CALL DELAY          ;and perform the debounce delay
+0040   09A7           00264     CALL CHECK_BUTTONS  ;Then check the buttons state again
+0041   0E03           00265     ANDLW 3
+0042   0643           00266     BTFSC STATUS, Z     ;If result is 0 (none of buttons were pressed)
+0043   0A83           00267     GOTO WAIT_FOR_TIMER ;Then go to the 'WAIT_FOR_TIMER' label
+0044   0031           00268     MOVWF button        ;Save the W value into the 'button'
+0045   0070           00269     CLRF count          ;clear loop counter
+0046                  00270 BUTTONS_LOOP:           ;Loop while button is pressed
+0046   0CFF           00271     MOVLW 0xFF          ;Load initial value for the delay 200ms
+0047   09EC           00272     CALL DELAY          ;And perform the delay
+0048   09A7           00273     CALL CHECK_BUTTONS  ;Then check the buttons state again
+0049   0E03           00274     ANDLW 3
+004A   0643           00275     BTFSC STATUS, Z     ;If state is 0 (it was a short press)
+004B   0A64           00276     GOTO CHANNEL_SEEK    ;Go to the 'CHANNEL_SEEK' label
+004C   02B0           00277     INCF count, F       ;Otherwise (long press) increment the counter
+004D   0711           00278     BTFSS button, 0     ;Check the last bit of the 'button' register
+004E   0A53           00279     GOTO DECREASE_VOLUME;If it's 0 (Down), go to 'DECREASE_VOLUME'
+004F                  00280 INCREASE_VOLUME:        ;Otherwise start 'INCREASE_VOLUME'
+004F   02AD           00281     INCF volume, F      ;Increment the 'volume' register
+0050   068D           00282     BTFSC volume, 4     ;If bit 4 becomes set (volume = 0b10010000)
+0051   00ED           00283     DECF volume, F      ;then decrement the 'volume' to get 0b10001111
+0052   0A56           00284     GOTO SET_VOLUME     ;and go to the 'SET_VOLUME' label
+0053                  00285 DECREASE_VOLUME:        ;Decrease the volume here
+0053   00ED           00286     DECF volume, F      ;Decrement the 'volume' register
+0054   07ED           00287     BTFSS volume, 7     ;If bit 7 becomes 0 (volume = 0b01111111)
+0055   02AD           00288     INCF volume, F      ;then increment the 'volume' to get 0b10000000
+0056                  00289 SET_VOLUME:             ;Set the radio volume
+0056   09BC           00290     CALL I2C_START      ;Issue I2C start condition
+0057   0C22           00291     MOVLW 0x22          ;Radio chip address for random writing is 0x22
+0058   09C3           00292     CALL I2C_WRITE_BYTE ;Write the radio address via I2C
+0059   0C05           00293     MOVLW 0x05          ;Set the register number to write to (0x05)
+005A   09C3           00294     CALL I2C_WRITE_BYTE ;And write it via I2C
+005B   0C88           00295     MOVLW 0x88          ;Set the high byte of 0x05 register (default value)
+005C   09C3           00296     CALL I2C_WRITE_BYTE ;And write it via i2C
+005D   020D           00297     MOVF volume, W      ;Set the 'volume' as low byte of 0x05 register
+005E   09C3           00298     CALL I2C_WRITE_BYTE ;And write it via I2C
+005F   09BF           00299     CALL I2C_STOP       ;Issue Stop condition
+0060   0712           00300     BTFSS startup, 0    ;If 'startup' is 0 (not startup condition)
+0061   0A46           00301     GOTO BUTTONS_LOOP   ;Then return to the 'BUTTONS_LOOP' label
+0062   0412           00302     BCF startup, 0      ;Otherwise reset the 'startup' register
+0063   0A3A           00303     GOTO LOOP           ;And return to the 'LOOP' label
+0064                  00304 CHANNEL_SEEK:           ;Here button is released and we check what to do
+0064   0230           00305     MOVF count, F       ;Check if 'count' register is 0
+0065   0743           00306     BTFSS STATUS, Z     ;If 'count' is not 0 (it was a long press)
+0066   0A7A           00307     GOTO SAVE_VOLUME    ;then go to the 'SAVE VOLUME' label
+0067   0073           00308     CLRF timer          ;Otherwise (short press) we clear the 'timer'
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0068   0514           00309     BSF need_save, 0    ;And set the 'need_save' register
+0069   09BC           00310     CALL I2C_START      ;Issue I2C Start condition
+006A   0C20           00311     MOVLW 0x20          ;Radio chip address for sequential writing is 0x20
+006B   09C3           00312     CALL I2C_WRITE_BYTE ;Write the radio address via I2C
+006C   0711           00313     BTFSS button, 0     ;Check the last bit of the 'button' register
+006D   0A74           00314     GOTO SEEK_DOWN      ;If it's 0 (button Down), go to 'SEEK_DOWN' label
+006E   0CC3           00315     MOVLW 0xC3          ;Otherwise set 0xC3 as high byte of 0x02 register
+006F   09C3           00316     CALL I2C_WRITE_BYTE ;And write it via I2C
+0070   0C01           00317     MOVLW 0x01          ;Set 0x01 as low byte of 0x02 register
+0071   09C3           00318     CALL I2C_WRITE_BYTE ;And write it via I2C
+0072   09BF           00319     CALL I2C_STOP       ;Issue I2C Stop condition
+0073   0A83           00320     GOTO WAIT_FOR_TIMER ;And go to the 'WAIT_FOR_TIMER' label
+0074                  00321 SEEK_DOWN:              ;Seek the station down
+0074   0CC1           00322     MOVLW 0xC1          ;Set 0xC1 as high byte of 0x02 register
+0075   09C3           00323     CALL I2C_WRITE_BYTE ;Ending of previous transaction
+0076   0C01           00324     MOVLW 0x01          ;Set 0x01 as low byte of 0x02 register
+0077   09C3           00325     CALL I2C_WRITE_BYTE ;And write it via I2C
+0078   09BF           00326     CALL I2C_STOP       ;Issue I2C Stop condition
+0079   0A83           00327     GOTO WAIT_FOR_TIMER ;And go to the 'WAIT_FOR_TIMER' label
+                      00328 
+007A                  00329 SAVE_VOLUME:            ;Save the volume to the EEPROM
+007A   09BC           00330     CALL I2C_START      ;Issue I2C start condition
+007B   0CA0           00331     MOVLW 0xA0          ;Set the EEPROM chip address to write
+007C   09C3           00332     CALL I2C_WRITE_BYTE ;And write it via I2C
+007D   0C00           00333     MOVLW 0x00          ;Set the EEPROM register address to write as 0x00
+007E   09C3           00334     CALL I2C_WRITE_BYTE ;And write it via I2C
+007F   020D           00335     MOVF volume, W      ;Set the 'volume' as value to write to EEPROM
+0080   09C3           00336     CALL I2C_WRITE_BYTE ;And write it via I2C
+0081   09BF           00337     CALL I2C_STOP       ;Issue I2C stop condition
+0082   0A3A           00338     GOTO LOOP           ;And return to the 'LOOP' labe;
+                      00339 
+0083                  00340 WAIT_FOR_TIMER:         ;Wait for 10 second to save the channel to EEPROM
+0083   0C45           00341     MOVLW 45            ;Set the delay about 40 ms
+0084   09EC           00342     CALL DELAY          ;And call the DELAY subroutine
+0085   03F3           00343     INCFSZ timer, F     ;Increase the 'timer' and check while it becomes 0
+0086   0A3A           00344     GOTO LOOP           ;If it's not 0 then return to the 'LOOP' label
+                      00345 
+0087   0714           00346     BTFSS need_save, 0  ;Otherwise check the 'need_save' register
+0088   0A3A           00347     GOTO LOOP           ;If it's 0 then return to the 'LOOP' register
+0089   0414           00348     BCF need_save, 0    ;Otherwise clear the 'need_save' register
+008A   09BC           00349     CALL I2C_START      ;Issue I2C start condition
+008B   0C22           00350     MOVLW 0x22          ;Set the radic chip address for random writing
+008C   09C3           00351     CALL I2C_WRITE_BYTE ;And write it via I2C
+008D   0C03           00352     MOVLW 0x03          ;Set the radio register to read from (0x03)
+008E   09C3           00353     CALL I2C_WRITE_BYTE ;And write it via I2C
+008F   09BC           00354     CALL I2C_START      ;Issue I2C Repeated start condition
+0090   0C23           00355     MOVLW 0x23          ;Set the radio chip address for random reading
+0091   09C3           00356     CALL I2C_WRITE_BYTE ;And write it via I2C
+0092   09D7           00357     CALL I2C_READ_BYTE  ;Read the high byte of the register 0x03
+0093   09E3           00358     CALL I2C_ACK        ;Issue the Acknowledgement
+0094   020A           00359     MOVF i2c_data, W    ;Copy the 'i2c_data' content into W register
+0095   002F           00360     MOVWF frequency_h   ;And save it to the 'frequency_h' register
+0096   09D7           00361     CALL I2C_READ_BYTE  ;Read the low byte of the register 0x03
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0097   09E8           00362     CALL I2C_NACK       ;Issue the Not acknowledgement
+0098   020A           00363     MOVF i2c_data, W    ;Copy the 'i2c_data' content into W register
+0099   002E           00364     MOVWF frequency_l   ;And save it to the 'frequency_l' register
+009A   09BF           00365     CALL I2C_STOP       ;Issue I2C stop condition
+                      00366 
+009B   09BC           00367     CALL I2C_START      ;Issue I2C start condition
+009C   0CA0           00368     MOVLW 0xA0          ;Set the EEPROM chip address for writing
+009D   09C3           00369     CALL I2C_WRITE_BYTE ;And write it via I2C
+009E   0C01           00370     MOVLW 0x01          ;Set the EEPROM memory address for writing as 0x01
+009F   09C3           00371     CALL I2C_WRITE_BYTE ;And write it via I2C
+00A0   020E           00372     MOVF frequency_l, W ;Load the 'frequency_l' content
+00A1   09C3           00373     CALL I2C_WRITE_BYTE ;And write it via I2C to the address 0x01
+00A2   04EF           00374     BCF frequency_h, 7  ;Some weird thing, this bit is set for some reason
+00A3   020F           00375     MOVF frequency_h, W ;Load the 'frequency_2' content
+00A4   09C3           00376     CALL I2C_WRITE_BYTE ;And write it via I2C to the address 0x02
+00A5   09BF           00377     CALL I2C_STOP       ;Issue I2C Stop condition
+                      00378 
+00A6   0A3A           00379     GOTO LOOP           ;loop forever
+                      00380 
+                      00381 ;-------------Check buttons---------------
+00A7                  00382 CHECK_BUTTONS:
+00A7   0706           00383     BTFSS GPIO, but_up  ;Check if button Up is pressed
+00A8   0801           00384     RETLW 1             ;and return 1 (b'01')
+00A9   0726           00385     BTFSS GPIO, but_down;Check if button Down is pressed
+00AA   0802           00386     RETLW 2             ;and return 2 (b'10')
+00AB   0800           00387     RETLW 0             ;If none of buttons is pressed then return 0
+                      00388 ;-------------Helper subroutines---------------
+00AC                  00389 SDA_HIGH:               ;Set SDA pin high
+00AC   05AB           00390     BSF port, sda       ;Set 'sda' bit in the 'port' to make it input
+00AD   020B           00391     MOVF port, W        ;Copy 'port' into W register
+00AE   0006           00392     TRIS GPIO           ;And set it as TRISGPIO value
+00AF   0800           00393     RETLW 0
+                      00394 
+00B0                  00395 SDA_LOW:                ;Set SDA pin low
+00B0   04AB           00396     BCF port, sda       ;Reset 'sda' bit in the 'port' to make it output
+00B1   020B           00397     MOVF port, W        ;Copy 'port' into W register
+00B2   0006           00398     TRIS GPIO           ;And set it as TRISGPIO value
+00B3   0800           00399     RETLW 0
+                      00400 
+00B4                  00401 SCL_HIGH:               ;Set SCL pin high
+00B4   058B           00402     BSF port, scl       ;Set 'scl' bit in the 'port' to make it input
+00B5   020B           00403     MOVF port, W        ;Copy 'port' into W register
+00B6   0006           00404     TRIS GPIO           ;And set it as TRISGPIO value
+00B7   0800           00405     RETLW 0
+                      00406 
+00B8                  00407 SCL_LOW:                ;Set SCL pin low
+00B8   048B           00408     BCF port, scl       ;Reset 'scl' bit in the 'port' to make it output
+00B9   020B           00409     MOVF port, W        ;Copy 'port' into W register
+00BA   0006           00410     TRIS GPIO           ;And set it as TRISGPIO value
+00BB   0800           00411     RETLW 0
+                      00412 
+                      00413 ;-------------I2C start condition--------------
+00BC                  00414 I2C_START:
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00BC   09B4           00415     CALL SCL_HIGH       ;Set SCL high
+00BD   09B0           00416     CALL SDA_LOW        ;Then set SDA low
+00BE   0800           00417     RETLW 0
+                      00418 ;-------------I2C stop condition---------------
+00BF                  00419 I2C_STOP:
+00BF   09B0           00420     CALL SDA_LOW        ;Set SDA low
+00C0   09B4           00421     CALL SCL_HIGH       ;Set SCL high
+00C1   09AC           00422     CALL SDA_HIGH       ;Then set SDA highs and release the bus
+00C2   0800           00423     RETLW 0
+                      00424 ;------------I2C write byte--------------------
+00C3                  00425 I2C_WRITE_BYTE:
+00C3   002A           00426     MOVWF i2c_data      ;Load 'i2c_data' from W register
+00C4   0C08           00427     MOVLW 8             ;Load value 8 into 'bit_count'
+00C5   0029           00428     MOVWF bit_count     ;to indicate we're going to send 8 bits
+00C6                  00429 I2C_WRITE_BIT:          ;Write single bit to I2C
+00C6   09B8           00430     CALL SCL_LOW        ;Set SCL low, now we can change SDA
+00C7   07EA           00431     BTFSS i2c_data, 7   ;Check the MSB of 'i2c_data'
+00C8   0ACB           00432     GOTO I2C_WRITE_0    ;If it's 0 then go to the 'I2C_WRITE_0' label
+00C9                  00433 I2C_WRITE_1:            ;Else continue with 'I2C_WRITE_1'
+00C9   09AC           00434     CALL SDA_HIGH       ;Set SDA high
+00CA   0ACC           00435     GOTO I2C_SHIFT      ;And go to the 'I2C_SHIFT' label
+00CB                  00436 I2C_WRITE_0:
+00CB   09B0           00437     CALL SDA_LOW        ;Set SDA low
+00CC                  00438 I2C_SHIFT:
+00CC   09B4           00439     CALL SCL_HIGH       ;Set SCL high to start the new pulse
+00CD   036A           00440     RLF i2c_data, F     ;Shift 'i2c_data' one bit to the left
+00CE   02E9           00441     DECFSZ bit_count, F ;Decrement the 'bit_count' value, check if it's 0
+00CF   0AC6           00442     GOTO I2C_WRITE_BIT  ;If not then return to the 'I2C_WRITE_BIT'
+00D0                  00443 I2C_CHECK_ACK:          ;Else check the acknowledgement bit
+00D0   09B8           00444     CALL SCL_LOW        ;Set I2C low to end the last pulse
+00D1   09AC           00445     CALL SDA_HIGH       ;Set SDA high to release the bus
+00D2   09B4           00446     CALL SCL_HIGH       ;Set I2C high to start the new pulse
+00D3   0206           00447     MOVF GPIO, W        ;Copy the GPIO register value into the 'ack'
+00D4   002C           00448     MOVWF ack           ;Now bit 'sda' of the 'ack' will contain ACK bit
+00D5   09B8           00449     CALL SCL_LOW        ;Set SCL low to end the acknowledgement bit
+00D6   0800           00450     RETLW 0
+                      00451 ;------------I2C read byte--------------------
+00D7                  00452 I2C_READ_BYTE:
+00D7   0C08           00453     MOVLW 8             ;Load value 8 into 'bit_count'
+00D8   0029           00454     MOVWF bit_count     ;to indicate we're going to receive 8 bits
+00D9   006A           00455     CLRF i2c_data       ;Clear the 'i2c_data' register
+00DA                  00456 I2C_READ_BIT:           ;Read single bit from the I2C
+00DA   036A           00457     RLF i2c_data, F     ;Shift the 'i2c_data' register one bit to the left
+00DB   09B8           00458     CALL SCL_LOW        ;Set SCL low to prepare for the new bit
+00DC   09B4           00459     CALL SCL_HIGH       ;Set SCL high to read the bit value
+00DD   06A6           00460     BTFSC GPIO, sda     ;Check the 'sda' bit in the GPIO register
+00DE   050A           00461     BSF i2c_data, 0     ;if it's 1 then set the LSB of the 'i2c_data'
+00DF   02E9           00462     DECFSZ bit_count, F ;Decrement the 'bit_count' value, check if it's 0
+00E0   0ADA           00463     GOTO I2C_READ_BIT   ;If not, then return to the 'I2C_READ_BIT'
+00E1   09B8           00464     CALL SCL_LOW        ;Set SCL low to end the last pulse
+00E2   0800           00465     RETLW 0             ;Otherwise return from the subroutine
+                      00466 ;----------I2C send ACK----------------------
+00E3                  00467 I2C_ACK:
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00E3   09B0           00468     CALL SDA_LOW        ;Set SDA low to issue ACK condition
+00E4   09B4           00469     CALL SCL_HIGH       ;Set SCL high to start the new pulse
+00E5   09B8           00470     CALL SCL_LOW        ;Set SCL low to end the pulse
+00E6   09AC           00471     CALL SDA_HIGH       ;Set SDA high to release the bus
+00E7   0800           00472     RETLW 0
+                      00473 ;----------I2C send NACK----------------------
+00E8                  00474 I2C_NACK:
+00E8   09AC           00475     CALL SDA_HIGH       ;Set SDA low to issue NACK condition
+00E9   09B4           00476     CALL SCL_HIGH       ;Set SCL high to start the new pulse
+00EA   09B8           00477     CALL SCL_LOW        ;Set SCL low to end the pulse
+00EB   0800           00478     RETLW 0
+                      00479 
+                      00480 ;-------------Delay subroutine--------------
+00EC                  00481 DELAY:                  ;Start DELAY subroutine here  
+00EC   0027           00482     MOVWF i             ;Copy the value to the register i
+00ED   0028           00483     MOVWF j             ;Copy the value to the register j
+00EE                  00484 DELAY_LOOP:             ;Start delay loop
+00EE   02E7           00485     DECFSZ i, F         ;Decrement i and check if it is not zero
+00EF   0AEE           00486     GOTO DELAY_LOOP     ;If not, then go to the DELAY_LOOP label
+00F0   02E8           00487     DECFSZ j, F         ;Decrement j and check if it is not zero
+00F1   0AEE           00488     GOTO DELAY_LOOP     ;If not, then go to the DELAY_LOOP label
+00F2   0800           00489     RETLW 0             ;Else return from the subroutine
+                      00490 
+                      00491 ;   END INIT            ; Program entry point.
+                      00492     END                 ; Program entry point.
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+BUTTONS_LOOP                      00000046
+C                                 00000000
+CAL0                              00000001
+CAL1                              00000002
+CAL2                              00000003
+CAL3                              00000004
+CAL4                              00000005
+CAL5                              00000006
+CAL6                              00000007
+CHANNEL_SEEK                      00000064
+CHECK_BUTTONS                     000000A7
+DC                                00000001
+DECREASE_VOLUME                   00000053
+DELAY                             000000EC
+DELAY_LOOP                        000000EE
+F                                 00000001
+FSR                               00000004
+GP0                               00000000
+GP1                               00000001
+GP2                               00000002
+GP3                               00000003
+GP4                               00000004
+GP5                               00000005
+GPIO                              00000006
+GPWUF                             00000007
+I2C_ACK                           000000E3
+I2C_CHECK_ACK                     000000D0
+I2C_NACK                          000000E8
+I2C_READ_BIT                      000000DA
+I2C_READ_BYTE                     000000D7
+I2C_SHIFT                         000000CC
+I2C_START                         000000BC
+I2C_STOP                          000000BF
+I2C_WRITE_0                       000000CB
+I2C_WRITE_1                       000000C9
+I2C_WRITE_BIT                     000000C6
+I2C_WRITE_BYTE                    000000C3
+INCREASE_VOLUME                   0000004F
+INDF                              00000000
+INIT                              00000002
+LOOP                              0000003A
+MAXRAM                            0000003F
+NOT_GPPU                          00000006
+NOT_GPWU                          00000007
+NOT_PD                            00000003
+NOT_TO                            00000004
+OSCCAL                            00000005
+PA0                               00000005
+PCL                               00000002
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RAM                               00000007
+RAM_                              00000015
+READ_EEPROM                       00000012
+SAVE_VOLUME                       0000007A
+SCL_HIGH                          000000B4
+SCL_LOW                           000000B8
+SDA_HIGH                          000000AC
+SDA_LOW                           000000B0
+SEEK_DOWN                         00000074
+SET_VOLUME                        00000056
+START_RADIO                       0000002A
+STATUS                            00000003
+T0CS                              00000005
+T0SE                              00000004
+TMR0                              00000001
+TRISIO0                           00000000
+TRISIO1                           00000001
+TRISIO2                           00000002
+TRISIO3                           00000003
+TRISIO4                           00000004
+TRISIO5                           00000005
+W                                 00000000
+WAIT_FOR_TIMER                    00000083
+Z                                 00000002
+_CONFIG                           00000FFF
+_CP_OFF                           00000FFF
+_CP_ON                            00000FF7
+_ExtRC_OSC                        00000FFF
+_IDLOC0                           00000400
+_IDLOC1                           00000401
+_IDLOC2                           00000402
+_IDLOC3                           00000403
+_IntRC_OSC                        00000FFE
+_LP_OSC                           00000FFC
+_MCLRE_OFF                        00000FEF
+_MCLRE_ON                         00000FFF
+_OSC_ExtRC                        00000FFF
+_OSC_IntRC                        00000FFE
+_OSC_LP                           00000FFC
+_OSC_XT                           00000FFD
+_WDT_OFF                          00000FFB
+_WDT_ON                           00000FFF
+_XT_OSC                           00000FFD
+__12F509                          00000001
+ack                               0000000C
+bit_count                         00000009
+but_down                          00000001
+but_up                            00000000
+button                            00000011
+count                             00000010
+frequency_h                       0000000F
+frequency_l                       0000000E
+i                                 00000007
+MPASM  5.51           PIC10F2XX_PIC12F5XX.ASM   9-3-2025  20:22:09         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+i2c_data                          0000000A
+j                                 00000008
+need_save                         00000014
+port                              0000000B
+scl                               00000004
+sda                               00000005
+startup                           00000012
+timer                             00000013
+volume                            0000000D
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXX-------------
+0400 : XXXX------------ ---------------- ---------------- ----------------
+0FC0 : ---------------- ---------------- ---------------- ---------------X
+
+All other memory blocks unused.
+
+Program Memory Words Used:   243
+Program Memory Words Free:   781
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+
